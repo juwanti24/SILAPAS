@@ -27,15 +27,15 @@ export default function Login() {
         setLoading(true);
         setError(false);
         axios
-            .post("https://dummyjson.com/user/login", {
-                username: dataForm.email,
+            .post("http://127.0.0.1:8000/api/login", {
+                email: dataForm.email,
                 password: dataForm.password,
             })
             .then((response) => {
-                if (response.status !== 200) {
-                    setError(response.data.message);
-                    return;
-                }
+                 localStorage.setItem(
+        "user",
+        JSON.stringify(response.data.user)
+    );
                 navigate("/");
             })
             .catch((err) => {
