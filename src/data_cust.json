@@ -1,0 +1,12 @@
+[
+  { "customer_id": "CUS-001", "customer_name": "Andi Pratama", "email": "andi.pratama@gmail.com", "phone": "081234567890", "loyalty": "Gold" },
+  { "customer_id": "CUS-002", "customer_name": "Siti Rahayu", "email": "siti.rahayu@gmail.com", "phone": "082345678901", "loyalty": "Silver" },
+  { "customer_id": "CUS-003", "customer_name": "Budi Santoso", "email": "budi.santoso@yahoo.com", "phone": "083456789012", "loyalty": "Bronze" },
+  { "customer_id": "CUS-004", "customer_name": "Dewi Lestari", "email": "dewi.lestari@gmail.com", "phone": "084567890123", "loyalty": "Gold" },
+  { "customer_id": "CUS-005", "customer_name": "Rizky Fajar", "email": "rizky.fajar@gmail.com", "phone": "085678901234", "loyalty": "Bronze" },
+  { "customer_id": "CUS-006", "customer_name": "Nurul Aini", "email": "nurul.aini@gmail.com", "phone": "086789012345", "loyalty": "Silver" },
+  { "customer_id": "CUS-007", "customer_name": "Hendra Wijaya", "email": "hendra.wijaya@yahoo.com", "phone": "087890123456", "loyalty": "Gold" },
+  { "customer_id": "CUS-008", "customer_name": "Fitri Handayani", "email": "fitri.handayani@gmail.com", "phone": "088901234567", "loyalty": "Silver" },
+  { "customer_id": "CUS-009", "customer_name": "Reza Mahendra", "email": "reza.mahendra@gmail.com", "phone": "089012345678", "loyalty": "Bronze" },
+  { "customer_id": "CUS-010", "customer_name": "Laila Nurhasanah", "email": "laila.nurhasanah@gmail.com", "phone": "081122334455", "loyalty": "Gold" }
+]
