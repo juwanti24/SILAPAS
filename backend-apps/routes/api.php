@@ -1,19 +1,22 @@
 <?php
+
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Hash;
-use App\Models\User;
+use App\Models\Admin;
+
 
 Route::post('/login', function (Request $request) {
 
-    $user = User::where('email', $request->email)->first();
+    $admin = Admin::where('username', $request->username)->first();
 
-    if (!$user) {
+    if (!$admin) {
         return response()->json([
-            'message' => 'Email tidak ditemukan'
+            'message' => 'Username tidak ditemukan'
         ], 401);
     }
 
-    if (!Hash::check($request->password, $user->password)) {
+    if (!Hash::check($request->password, $admin->password)) {
         return response()->json([
             'message' => 'Password salah'
         ], 401);
@@ -22,9 +25,32 @@ Route::post('/login', function (Request $request) {
     return response()->json([
         'message' => 'Login berhasil',
         'user' => [
-            'id' => $user->id,
-            'name' => $user->name,
-            'email' => $user->email,
+            'id_admin' => $admin->id_admin,
+            'nama' => $admin->nama,
+            'username' => $admin->username,
+            'role' => 'admin',
         ]
     ]);
+});
+
+use Illuminate\Support\Facades\DB;
+
+Route::get('/kamars', function () {
+    return response()->json(DB::table('kamars')->get());
+});
+
+Route::get('/pembinas', function () {
+    return response()->json(DB::table('pembinas')->get());
+});
+
+Route::get('/anak-binaans', function () {
+    return response()->json(DB::table('anak_binaans')->get());
+});
+
+Route::get('/pelanggarans', function () {
+    return response()->json(DB::table('pelanggarans')->get());
+});
+
+Route::get('/penempatans', function () {
+    return response()->json(DB::table('penempatans')->get());
 });

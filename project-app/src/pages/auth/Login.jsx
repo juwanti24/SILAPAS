@@ -9,7 +9,7 @@ export default function Login() {
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState("");
     const [dataForm, setDataForm] = useState({
-        email: "",
+        username: "",
         password: "",
     });
 
@@ -27,10 +27,10 @@ export default function Login() {
         setLoading(true);
         setError(false);
         axios
-            .post("http://127.0.0.1:8000/api/login", {
-                email: dataForm.email,
-                password: dataForm.password,
-            })
+    .post("http://127.0.0.1:8000/api/login", {
+        username: dataForm.username,
+        password: dataForm.password,
+    })
             .then((response) => {
                  localStorage.setItem(
         "user",
@@ -105,15 +105,15 @@ export default function Login() {
                     </label>
                     <input
                         type="text"
-                        id="email"
-                        name="email"
+                        id="username"
+                        name="username"
                         className="w-full px-3 py-2.5 text-sm rounded-lg outline-none transition-all"
                         style={{
                             backgroundColor: "#F7F8FA",
                             border: "0.5px solid #D0D3DA",
                             color: "#293040",
                         }}
-                        placeholder="admin@lpka.go.id"
+                        placeholder="nama pengguna"
                         onChange={handleChange}
                         onFocus={(e) => (e.target.style.borderColor = "#D3AC2B")}
                         onBlur={(e) => (e.target.style.borderColor = "#D0D3DA")}

@@ -1,18 +1,18 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
 
-export default function Customer() {
-    const [pembinas, setPembinas] = useState([]);
+export default function AnakBinaan() {
+    const [anakBinaans, setAnakBinaans] = useState([]);
     const [showForm, setShowForm] = useState(false);
 
     useEffect(() => {
         axios
-            .get("http://127.0.0.1:8000/api/pembinas")
+            .get("http://127.0.0.1:8000/api/anak-binaans")
             .then((response) => {
-                setPembinas(response.data);
+                setAnakBinaans(response.data);
             })
             .catch((error) => {
-                console.error("Gagal mengambil data pembina:", error);
+                console.error("Gagal mengambil data anak binaan:", error);
             });
     }, []);
 
@@ -21,10 +21,10 @@ export default function Customer() {
             <div className="flex justify-between items-center mb-8">
                 <div>
                     <h1 className="text-2xl font-bold text-[#0f1f3d]">
-                        Data Pembina
+                        Data Anak Binaan
                     </h1>
                     <p className="text-gray-500">
-                        Dashboard / Data Pembina
+                        Dashboard / Data Anak Binaan
                     </p>
                 </div>
 
@@ -32,19 +32,31 @@ export default function Customer() {
                     onClick={() => setShowForm(!showForm)}
                     className="bg-[#293040] text-[#D3AC2B] px-6 py-3 rounded-lg font-semibold"
                 >
-                    Add Pembina
+                    Add Anak Binaan
                 </button>
             </div>
 
             {showForm && (
                 <div className="bg-white border border-gray-300 rounded-lg p-5 mb-6 shadow-sm">
                     <h2 className="text-xl font-bold mb-4 text-[#0f1f3d]">
-                        Tambah Data Pembina
+                        Tambah Data Anak Binaan
                     </h2>
 
                     <input
                         type="text"
-                        placeholder="Nama Pembina"
+                        placeholder="Nama Anak"
+                        className="w-full border border-gray-300 rounded-lg px-3 py-2 mb-3"
+                    />
+
+                    <input
+                        type="date"
+                        placeholder="Tanggal Lahir"
+                        className="w-full border border-gray-300 rounded-lg px-3 py-2 mb-3"
+                    />
+
+                    <input
+                        type="date"
+                        placeholder="Tanggal Masuk"
                         className="w-full border border-gray-300 rounded-lg px-3 py-2 mb-3"
                     />
 
@@ -56,13 +68,13 @@ export default function Customer() {
 
                     <input
                         type="text"
-                        placeholder="No HP"
+                        placeholder="Alamat"
                         className="w-full border border-gray-300 rounded-lg px-3 py-2 mb-3"
                     />
 
                     <input
-                        type="text"
-                        placeholder="Alamat"
+                        type="number"
+                        placeholder="ID Pembina"
                         className="w-full border border-gray-300 rounded-lg px-3 py-2 mb-3"
                     />
 
@@ -82,25 +94,33 @@ export default function Customer() {
             )}
 
             <div className="space-y-5">
-                {pembinas.map((pembina) => (
+                {anakBinaans.map((anak) => (
                     <div
-                        key={pembina.id_pembina}
+                        key={anak.id_anak}
                         className="bg-white border border-gray-300 rounded-lg p-5 shadow-sm"
                     >
                         <h2 className="text-xl font-bold text-[#0f1f3d] mb-2">
-                            {pembina.nama_pembina}
+                            {anak.nama_anak}
                         </h2>
 
                         <p>
-                            Jenis Kelamin: <b>{pembina.jenis_kelamin}</b>
+                            ID Pembina: <b>{anak.id_pembina}</b>
                         </p>
 
                         <p>
-                            No HP: <b>{pembina.no_hp}</b>
+                            Tanggal Lahir: <b>{anak.tanggal_lahir}</b>
                         </p>
 
                         <p>
-                            Alamat: <b>{pembina.alamat}</b>
+                            Tanggal Masuk: <b>{anak.tanggal_masuk}</b>
+                        </p>
+
+                        <p>
+                            Jenis Kelamin: <b>{anak.jenis_kelamin}</b>
+                        </p>
+
+                        <p>
+                            Alamat: <b>{anak.alamat}</b>
                         </p>
                     </div>
                 ))}
