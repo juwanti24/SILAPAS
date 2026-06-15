@@ -3,8 +3,8 @@ import "./assets/tailwind.css";
 import React,{Suspense} from "react";
 import Loading from"./components/Loading";
   const Dashboard = React.lazy(() => import("./pages/Dashboard"));
-  const Orders = React.lazy(() => import("./pages/Order"));
-  const Customers = React.lazy(() => import("./pages/Customer"));
+  const Kamar = React.lazy(() => import("./pages/Kamar"));
+  const Pembina = React.lazy(() => import("./pages/Pembina"));
   const NotFound = React.lazy(() => import("./pages/NotFound"));
   const AuthLayout = React.lazy(() => import("./layouts/AuthLayout"));
   const MainLayout = React.lazy(() => import("./layouts/MainLayout"));
@@ -20,8 +20,8 @@ function App() {
         <Routes>
           <Route element={<MainLayout />}>
           <Route path="/" element={<Dashboard />} />
-         <Route path="/orders" element={<Orders />} />
-        <Route path="/customers" element={<Customers />} />
+         <Route path="/kamar" element={<Kamar />} />
+        <Route path="/pembina" element={<Pembina />} />
         <Route path="*" element={<NotFound />} />
         <Route path="/anak-binaan" element={<AnakBinaan />} />
 <Route path="/pelanggaran" element={<Pelanggaran />} />

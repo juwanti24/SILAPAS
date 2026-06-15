@@ -19,7 +19,7 @@ class AdminSeeder extends Seeder
         ],
          [
             'name' => 'Juwan',
-            'email' => 'juwan@gmail.com',
+            'email' => 'jwn@gmail.com',
             'password' => Hash::make('123456'),
             'created_at' => now(),
             'updated_at' => now(),

@@ -43,8 +43,16 @@ Route::get('/pembinas', function () {
     return response()->json(DB::table('pembinas')->get());
 });
 
-Route::get('/anak-binaans', function () {
-    return response()->json(DB::table('anak_binaans')->get());
+Route::get('/anak-binaans', function (Request $request) {
+    $search = $request->query('search', ''); // ambil ?search= dari URL, default ""
+
+    $data = DB::table('anak_binaans')
+        ->when($search, function ($query) use ($search) {
+            $query->where('nama_anak', 'like', "%{$search}%");
+        })
+        ->get();
+
+    return response()->json($data);
 });
 
 Route::get('/pelanggarans', function () {

@@ -49,7 +49,7 @@ export default function PageHeader({ title, breadcrumb, children }) {
                     className="text-sm font-semibold px-4 py-2 rounded-lg transition-opacity hover:opacity-90 active:opacity-80"
                     style={{ backgroundColor: "#293040", color: "#D3AC2B" }}
                 >
-                    Add {children}
+                    {children}
                 </button>
             </div>
         </div>

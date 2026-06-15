@@ -1,17 +1,16 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
-import { FaPlus, FaSpinner, FaInbox } from "react-icons/fa";
+import { FaUserPlus, FaSpinner, FaInbox } from "react-icons/fa";
 
-export default function Pelanggaran() {
-    const [pelanggarans, setPelanggarans] = useState([]);
+export default function Pembina() {
+    const [pembinas, setPembinas] = useState([]);
     const [loading, setLoading] = useState(true);
     const [showForm, setShowForm] = useState(false);
     const [form, setForm] = useState({
-        id_anak: "",
-        jenis_pelanggaran: "",
-        deskripsi: "",
-        sanksi: "",
-        tanggal_pelanggaran: "",
+        nama_pembina: "",
+        jenis_kelamin: "",
+        no_hp: "",
+        alamat: "",
     });
 
     useEffect(() => {
@@ -21,12 +20,12 @@ export default function Pelanggaran() {
     const fetchData = () => {
         setLoading(true);
         axios
-            .get("http://127.0.0.1:8000/api/pelanggarans")
+            .get("http://127.0.0.1:8000/api/pembinas")
             .then((response) => {
-                setPelanggarans(response.data);
+                setPembinas(response.data);
             })
             .catch((error) => {
-                console.error("Gagal mengambil data pelanggaran:", error);
+                console.error("Gagal mengambil data pembina:", error);
             })
             .finally(() => {
                 setLoading(false);
@@ -39,10 +38,10 @@ export default function Pelanggaran() {
 
     const handleSubmit = () => {
         axios
-            .post("http://127.0.0.1:8000/api/pelanggarans", form)
+            .post("http://127.0.0.1:8000/api/pembinas", form)
             .then(() => {
                 setShowForm(false);
-                setForm({ id_anak: "", jenis_pelanggaran: "", deskripsi: "", sanksi: "", tanggal_pelanggaran: "" });
+                setForm({ nama_pembina: "", jenis_kelamin: "", no_hp: "", alamat: "" });
                 fetchData();
             })
             .catch((error) => {
@@ -55,15 +54,15 @@ export default function Pelanggaran() {
             {/* Header */}
             <div className="flex justify-between items-center mb-8">
                 <div>
-                    <h1 className="text-2xl font-bold text-[#0f1f3d]">Pelanggaran & Sanksi</h1>
-                    <p className="text-sm text-gray-400 mt-0.5">Dashboard / Pelanggaran & Sanksi</p>
+                    <h1 className="text-2xl font-bold text-[#0f1f3d]">Data Pembina</h1>
+                    <p className="text-sm text-gray-400 mt-0.5">Dashboard / Data Pembina</p>
                 </div>
                 <button
                     onClick={() => setShowForm(!showForm)}
                     className="flex items-center gap-2 bg-[#293040] text-[#D3AC2B] px-5 py-2.5 rounded-lg font-semibold hover:bg-[#1e2535] transition"
                 >
-                    <FaPlus />
-                    Tambah Pelanggaran
+                    <FaUserPlus />
+                    Tambah Pembina
                 </button>
             </div>
 
@@ -71,60 +70,52 @@ export default function Pelanggaran() {
             {showForm && (
                 <div className="bg-white border border-gray-200 rounded-xl p-6 mb-6 shadow-sm">
                     <h2 className="text-lg font-bold mb-4 text-[#0f1f3d] border-b border-gray-100 pb-3">
-                        Tambah Data Pelanggaran
+                        Tambah Data Pembina
                     </h2>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                         <div>
-                            <label className="text-xs font-semibold text-gray-500 mb-1 block">ID Anak</label>
-                            <input
-                                type="number"
-                                name="id_anak"
-                                value={form.id_anak}
-                                onChange={handleChange}
-                                placeholder="ID Anak Binaan"
-                                className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#D3AC2B]"
-                            />
-                        </div>
-                        <div>
-                            <label className="text-xs font-semibold text-gray-500 mb-1 block">Jenis Pelanggaran</label>
+                            <label className="text-xs font-semibold text-gray-500 mb-1 block">Nama Pembina</label>
                             <input
                                 type="text"
-                                name="jenis_pelanggaran"
-                                value={form.jenis_pelanggaran}
+                                name="nama_pembina"
+                                value={form.nama_pembina}
                                 onChange={handleChange}
-                                placeholder="Jenis pelanggaran"
+                                placeholder="Nama lengkap"
                                 className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#D3AC2B]"
                             />
                         </div>
                         <div>
-                            <label className="text-xs font-semibold text-gray-500 mb-1 block">Deskripsi</label>
-                            <textarea
-                                name="deskripsi"
-                                value={form.deskripsi}
+                            <label className="text-xs font-semibold text-gray-500 mb-1 block">Jenis Kelamin</label>
+                            <select
+                                name="jenis_kelamin"
+                                value={form.jenis_kelamin}
                                 onChange={handleChange}
-                                placeholder="Deskripsi pelanggaran"
-                                rows={2}
                                 className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#D3AC2B]"
-                            />
+                            >
+                                <option value="">Pilih Jenis Kelamin</option>
+                                <option value="Laki-laki">Laki-laki</option>
+                                <option value="Perempuan">Perempuan</option>
+                            </select>
                         </div>
                         <div>
-                            <label className="text-xs font-semibold text-gray-500 mb-1 block">Sanksi</label>
-                            <textarea
-                                name="sanksi"
-                                value={form.sanksi}
-                                onChange={handleChange}
-                                placeholder="Sanksi yang diberikan"
-                                rows={2}
-                                className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#D3AC2B]"
-                            />
-                        </div>
-                        <div>
-                            <label className="text-xs font-semibold text-gray-500 mb-1 block">Tanggal Pelanggaran</label>
+                            <label className="text-xs font-semibold text-gray-500 mb-1 block">No HP</label>
                             <input
-                                type="date"
-                                name="tanggal_pelanggaran"
-                                value={form.tanggal_pelanggaran}
+                                type="text"
+                                name="no_hp"
+                                value={form.no_hp}
                                 onChange={handleChange}
+                                placeholder="08xx-xxxx-xxxx"
+                                className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#D3AC2B]"
+                            />
+                        </div>
+                        <div>
+                            <label className="text-xs font-semibold text-gray-500 mb-1 block">Alamat</label>
+                            <input
+                                type="text"
+                                name="alamat"
+                                value={form.alamat}
+                                onChange={handleChange}
+                                placeholder="Alamat lengkap"
                                 className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#D3AC2B]"
                             />
                         </div>
@@ -152,44 +143,48 @@ export default function Pelanggaran() {
                     <thead>
                         <tr className="bg-[#293040] text-[#D3AC2B]">
                             <th className="text-left px-5 py-3.5 font-semibold">#</th>
-                            <th className="text-left px-5 py-3.5 font-semibold">ID Anak</th>
-                            <th className="text-left px-5 py-3.5 font-semibold">Jenis Pelanggaran</th>
-                            <th className="text-left px-5 py-3.5 font-semibold">Deskripsi</th>
-                            <th className="text-left px-5 py-3.5 font-semibold">Sanksi</th>
-                            <th className="text-left px-5 py-3.5 font-semibold">Tanggal</th>
+                            <th className="text-left px-5 py-3.5 font-semibold">Nama Pembina</th>
+                            <th className="text-left px-5 py-3.5 font-semibold">Jenis Kelamin</th>
+                            <th className="text-left px-5 py-3.5 font-semibold">No HP</th>
+                            <th className="text-left px-5 py-3.5 font-semibold">Alamat</th>
                         </tr>
                     </thead>
                     <tbody>
                         {loading ? (
                             <tr>
-                                <td colSpan={6} className="text-center py-16 text-gray-400">
+                                <td colSpan={5} className="text-center py-16 text-gray-400">
                                     <FaSpinner className="animate-spin mx-auto text-2xl mb-2 text-[#D3AC2B]" />
                                     <p>Memuat data...</p>
                                 </td>
                             </tr>
-                        ) : pelanggarans.length === 0 ? (
+                        ) : pembinas.length === 0 ? (
                             <tr>
-                                <td colSpan={6} className="text-center py-16 text-gray-400">
+                                <td colSpan={5} className="text-center py-16 text-gray-400">
                                     <FaInbox className="mx-auto text-3xl mb-2 opacity-40" />
-                                    <p>Belum ada data pelanggaran</p>
+                                    <p>Belum ada data pembina</p>
                                 </td>
                             </tr>
                         ) : (
-                            pelanggarans.map((p, index) => (
+                            pembinas.map((pembina, index) => (
                                 <tr
-                                    key={p.id_pelanggaran}
+                                    key={pembina.id_pembina}
                                     className="border-t border-gray-100 hover:bg-amber-50 transition"
                                 >
                                     <td className="px-5 py-3.5 text-gray-400">{index + 1}</td>
-                                    <td className="px-5 py-3.5 text-gray-600">{p.id_anak}</td>
-                                    <td className="px-5 py-3.5 font-semibold text-[#0f1f3d]">{p.jenis_pelanggaran}</td>
-                                    <td className="px-5 py-3.5 text-gray-600 max-w-[180px] truncate">{p.deskripsi}</td>
+                                    <td className="px-5 py-3.5 font-semibold text-[#0f1f3d]">{pembina.nama_pembina}</td>
                                     <td className="px-5 py-3.5">
-                                        <span className="bg-red-50 text-red-700 border border-red-100 px-2.5 py-1 rounded-full text-xs font-semibold">
-                                            {p.sanksi}
+                                        <span
+                                            className={`px-2.5 py-1 rounded-full text-xs font-semibold ${
+                                                pembina.jenis_kelamin === "Laki-laki"
+                                                    ? "bg-blue-100 text-blue-700"
+                                                    : "bg-pink-100 text-pink-700"
+                                            }`}
+                                        >
+                                            {pembina.jenis_kelamin}
                                         </span>
                                     </td>
-                                    <td className="px-5 py-3.5 text-gray-600">{p.tanggal_pelanggaran}</td>
+                                    <td className="px-5 py-3.5 text-gray-600">{pembina.no_hp}</td>
+                                    <td className="px-5 py-3.5 text-gray-600 max-w-[200px] truncate">{pembina.alamat}</td>
                                 </tr>
                             ))
                         )}

@@ -2,16 +2,15 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import { FaPlus, FaSpinner, FaInbox } from "react-icons/fa";
 
-export default function Pelanggaran() {
-    const [pelanggarans, setPelanggarans] = useState([]);
+export default function Kamar() {
+    const [kamars, setKamars] = useState([]);
     const [loading, setLoading] = useState(true);
     const [showForm, setShowForm] = useState(false);
     const [form, setForm] = useState({
-        id_anak: "",
-        jenis_pelanggaran: "",
-        deskripsi: "",
-        sanksi: "",
-        tanggal_pelanggaran: "",
+        nama_kamar: "",
+        blok: "",
+        kapasitas: "",
+        status: "",
     });
 
     useEffect(() => {
@@ -21,12 +20,12 @@ export default function Pelanggaran() {
     const fetchData = () => {
         setLoading(true);
         axios
-            .get("http://127.0.0.1:8000/api/pelanggarans")
+            .get("http://127.0.0.1:8000/api/kamars")
             .then((response) => {
-                setPelanggarans(response.data);
+                setKamars(response.data);
             })
             .catch((error) => {
-                console.error("Gagal mengambil data pelanggaran:", error);
+                console.error("Gagal mengambil data kamar:", error);
             })
             .finally(() => {
                 setLoading(false);
@@ -39,10 +38,10 @@ export default function Pelanggaran() {
 
     const handleSubmit = () => {
         axios
-            .post("http://127.0.0.1:8000/api/pelanggarans", form)
+            .post("http://127.0.0.1:8000/api/kamars", form)
             .then(() => {
                 setShowForm(false);
-                setForm({ id_anak: "", jenis_pelanggaran: "", deskripsi: "", sanksi: "", tanggal_pelanggaran: "" });
+                setForm({ nama_kamar: "", blok: "", kapasitas: "", status: "" });
                 fetchData();
             })
             .catch((error) => {
@@ -50,20 +49,28 @@ export default function Pelanggaran() {
             });
     };
 
+    const statusColor = (status) => {
+        if (!status) return "bg-gray-100 text-gray-500";
+        const s = status.toLowerCase();
+        if (s === "aktif" || s === "tersedia") return "bg-green-100 text-green-700";
+        if (s === "penuh") return "bg-red-100 text-red-700";
+        return "bg-yellow-100 text-yellow-700";
+    };
+
     return (
         <div className="p-6">
             {/* Header */}
             <div className="flex justify-between items-center mb-8">
                 <div>
-                    <h1 className="text-2xl font-bold text-[#0f1f3d]">Pelanggaran & Sanksi</h1>
-                    <p className="text-sm text-gray-400 mt-0.5">Dashboard / Pelanggaran & Sanksi</p>
+                    <h1 className="text-2xl font-bold text-[#0f1f3d]">Data Kamar</h1>
+                    <p className="text-sm text-gray-400 mt-0.5">Dashboard / Data Kamar</p>
                 </div>
                 <button
                     onClick={() => setShowForm(!showForm)}
                     className="flex items-center gap-2 bg-[#293040] text-[#D3AC2B] px-5 py-2.5 rounded-lg font-semibold hover:bg-[#1e2535] transition"
                 >
                     <FaPlus />
-                    Tambah Pelanggaran
+                    Tambah Kamar
                 </button>
             </div>
 
@@ -71,62 +78,55 @@ export default function Pelanggaran() {
             {showForm && (
                 <div className="bg-white border border-gray-200 rounded-xl p-6 mb-6 shadow-sm">
                     <h2 className="text-lg font-bold mb-4 text-[#0f1f3d] border-b border-gray-100 pb-3">
-                        Tambah Data Pelanggaran
+                        Tambah Data Kamar
                     </h2>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                         <div>
-                            <label className="text-xs font-semibold text-gray-500 mb-1 block">ID Anak</label>
-                            <input
-                                type="number"
-                                name="id_anak"
-                                value={form.id_anak}
-                                onChange={handleChange}
-                                placeholder="ID Anak Binaan"
-                                className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#D3AC2B]"
-                            />
-                        </div>
-                        <div>
-                            <label className="text-xs font-semibold text-gray-500 mb-1 block">Jenis Pelanggaran</label>
+                            <label className="text-xs font-semibold text-gray-500 mb-1 block">Nama Kamar</label>
                             <input
                                 type="text"
-                                name="jenis_pelanggaran"
-                                value={form.jenis_pelanggaran}
+                                name="nama_kamar"
+                                value={form.nama_kamar}
                                 onChange={handleChange}
-                                placeholder="Jenis pelanggaran"
+                                placeholder="Contoh: Kamar A1"
                                 className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#D3AC2B]"
                             />
                         </div>
                         <div>
-                            <label className="text-xs font-semibold text-gray-500 mb-1 block">Deskripsi</label>
-                            <textarea
-                                name="deskripsi"
-                                value={form.deskripsi}
-                                onChange={handleChange}
-                                placeholder="Deskripsi pelanggaran"
-                                rows={2}
-                                className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#D3AC2B]"
-                            />
-                        </div>
-                        <div>
-                            <label className="text-xs font-semibold text-gray-500 mb-1 block">Sanksi</label>
-                            <textarea
-                                name="sanksi"
-                                value={form.sanksi}
-                                onChange={handleChange}
-                                placeholder="Sanksi yang diberikan"
-                                rows={2}
-                                className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#D3AC2B]"
-                            />
-                        </div>
-                        <div>
-                            <label className="text-xs font-semibold text-gray-500 mb-1 block">Tanggal Pelanggaran</label>
+                            <label className="text-xs font-semibold text-gray-500 mb-1 block">Blok</label>
                             <input
-                                type="date"
-                                name="tanggal_pelanggaran"
-                                value={form.tanggal_pelanggaran}
+                                type="text"
+                                name="blok"
+                                value={form.blok}
                                 onChange={handleChange}
+                                placeholder="Contoh: A, B, C"
                                 className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#D3AC2B]"
                             />
+                        </div>
+                        <div>
+                            <label className="text-xs font-semibold text-gray-500 mb-1 block">Kapasitas</label>
+                            <input
+                                type="number"
+                                name="kapasitas"
+                                value={form.kapasitas}
+                                onChange={handleChange}
+                                placeholder="Jumlah kapasitas"
+                                className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#D3AC2B]"
+                            />
+                        </div>
+                        <div>
+                            <label className="text-xs font-semibold text-gray-500 mb-1 block">Status</label>
+                            <select
+                                name="status"
+                                value={form.status}
+                                onChange={handleChange}
+                                className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#D3AC2B]"
+                            >
+                                <option value="">Pilih Status</option>
+                                <option value="Aktif">Aktif</option>
+                                <option value="Penuh">Penuh</option>
+                                <option value="Tidak Aktif">Tidak Aktif</option>
+                            </select>
                         </div>
                     </div>
                     <div className="flex gap-3 mt-4">
@@ -152,44 +152,42 @@ export default function Pelanggaran() {
                     <thead>
                         <tr className="bg-[#293040] text-[#D3AC2B]">
                             <th className="text-left px-5 py-3.5 font-semibold">#</th>
-                            <th className="text-left px-5 py-3.5 font-semibold">ID Anak</th>
-                            <th className="text-left px-5 py-3.5 font-semibold">Jenis Pelanggaran</th>
-                            <th className="text-left px-5 py-3.5 font-semibold">Deskripsi</th>
-                            <th className="text-left px-5 py-3.5 font-semibold">Sanksi</th>
-                            <th className="text-left px-5 py-3.5 font-semibold">Tanggal</th>
+                            <th className="text-left px-5 py-3.5 font-semibold">Nama Kamar</th>
+                            <th className="text-left px-5 py-3.5 font-semibold">Blok</th>
+                            <th className="text-left px-5 py-3.5 font-semibold">Kapasitas</th>
+                            <th className="text-left px-5 py-3.5 font-semibold">Status</th>
                         </tr>
                     </thead>
                     <tbody>
                         {loading ? (
                             <tr>
-                                <td colSpan={6} className="text-center py-16 text-gray-400">
+                                <td colSpan={5} className="text-center py-16 text-gray-400">
                                     <FaSpinner className="animate-spin mx-auto text-2xl mb-2 text-[#D3AC2B]" />
                                     <p>Memuat data...</p>
                                 </td>
                             </tr>
-                        ) : pelanggarans.length === 0 ? (
+                        ) : kamars.length === 0 ? (
                             <tr>
-                                <td colSpan={6} className="text-center py-16 text-gray-400">
+                                <td colSpan={5} className="text-center py-16 text-gray-400">
                                     <FaInbox className="mx-auto text-3xl mb-2 opacity-40" />
-                                    <p>Belum ada data pelanggaran</p>
+                                    <p>Belum ada data kamar</p>
                                 </td>
                             </tr>
                         ) : (
-                            pelanggarans.map((p, index) => (
+                            kamars.map((kamar, index) => (
                                 <tr
-                                    key={p.id_pelanggaran}
+                                    key={kamar.id_kamar}
                                     className="border-t border-gray-100 hover:bg-amber-50 transition"
                                 >
                                     <td className="px-5 py-3.5 text-gray-400">{index + 1}</td>
-                                    <td className="px-5 py-3.5 text-gray-600">{p.id_anak}</td>
-                                    <td className="px-5 py-3.5 font-semibold text-[#0f1f3d]">{p.jenis_pelanggaran}</td>
-                                    <td className="px-5 py-3.5 text-gray-600 max-w-[180px] truncate">{p.deskripsi}</td>
+                                    <td className="px-5 py-3.5 font-semibold text-[#0f1f3d]">{kamar.nama_kamar}</td>
+                                    <td className="px-5 py-3.5 text-gray-600">{kamar.blok}</td>
+                                    <td className="px-5 py-3.5 text-gray-600">{kamar.kapasitas} orang</td>
                                     <td className="px-5 py-3.5">
-                                        <span className="bg-red-50 text-red-700 border border-red-100 px-2.5 py-1 rounded-full text-xs font-semibold">
-                                            {p.sanksi}
+                                        <span className={`px-2.5 py-1 rounded-full text-xs font-semibold ${statusColor(kamar.status)}`}>
+                                            {kamar.status}
                                         </span>
                                     </td>
-                                    <td className="px-5 py-3.5 text-gray-600">{p.tanggal_pelanggaran}</td>
                                 </tr>
                             ))
                         )}

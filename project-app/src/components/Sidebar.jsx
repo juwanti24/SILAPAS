@@ -48,7 +48,7 @@ export default function Sidebar() {
                 style={{ borderBottom: "0.5px solid rgba(255,255,255,0.08)" }}
             >
                 <div
-                    className="w-9 h-9 rounded-lg flex items-center justify-center flex-shrink-0"
+                    className="w-9 h-9 rounded-lg flex items-center justify-center shrink-0"
                     style={{ backgroundColor: "#D3AC2B" }}
                 >
                     {/* Ganti logo: ikon MdMeetingRoom sebagai simbol lembaga */}
@@ -88,29 +88,29 @@ export default function Sidebar() {
                             className={menuClass}
                             style={({ isActive }) => menuStyle(isActive)}
                         >
-                            <MdDashboard className="text-lg flex-shrink-0" />
+                            <MdDashboard className="text-lg shrink-0" />
                             <span>Dashboard</span>
                         </NavLink>
                     </li>
                     <li>
                         <NavLink
                             id="menu-2"
-                            to="/orders"
+                            to="/kamar"
                             className={menuClass}
                             style={({ isActive }) => menuStyle(isActive)}
                         >
-                            <MdReceiptLong className="text-lg flex-shrink-0" />
+                            <MdReceiptLong className="text-lg shrink-0" />
                             <span>Data Kamar</span>
                         </NavLink>
                     </li>
                     <li>
                         <NavLink
                             id="menu-3"
-                            to="/customers"
+                            to="/pembina"
                             className={menuClass}
                             style={({ isActive }) => menuStyle(isActive)}
                         >
-                            <MdPeople className="text-lg flex-shrink-0" />
+                            <MdPeople className="text-lg shrink-0" />
                             <span>Data Pembina</span>
                         </NavLink>
                     </li>
@@ -136,7 +136,7 @@ export default function Sidebar() {
                             className={menuClassSecondary}
                             style={({ isActive }) => menuStyleSecondary(isActive)}
                         >
-                            <MdChildCare className="text-lg flex-shrink-0" />
+                            <MdChildCare className="text-lg shrink-0" />
                             <span>Data Anak Binaan</span>
                         </NavLink>
                     </li>
@@ -147,7 +147,7 @@ export default function Sidebar() {
                             className={menuClassSecondary}
                             style={({ isActive }) => menuStyleSecondary(isActive)}
                         >
-                            <MdGavel className="text-lg flex-shrink-0" />
+                            <MdGavel className="text-lg shrink-0" />
                             <span>Pelanggaran & Sanksi</span>
                         </NavLink>
                     </li>
@@ -158,7 +158,7 @@ export default function Sidebar() {
                             className={menuClassSecondary}
                             style={({ isActive }) => menuStyleSecondary(isActive)}
                         >
-                            <MdMeetingRoom className="text-lg flex-shrink-0" />
+                            <MdMeetingRoom className="text-lg shrink-0" />
                             <span>Penempatan</span>
                         </NavLink>
                     </li>
@@ -171,38 +171,7 @@ export default function Sidebar() {
                 className="mt-auto pt-4"
                 style={{ borderTop: "0.5px solid rgba(255,255,255,0.08)" }}
             >
-                <div
-                    id="footer-card"
-                    className="rounded-xl p-3 mb-5 flex items-center gap-3"
-                    style={{
-                        backgroundColor: "rgba(211,172,43,0.12)",
-                        border: "0.5px solid rgba(211,172,43,0.25)",
-                    }}
-                >
-                    <div
-                        id="footer-text"
-                        className="flex-1 text-xs"
-                        style={{ color: "rgba(255,255,255,0.65)" }}
-                    >
-                        <span>Atur menu melalui tombol di bawah!</span>
-                        <div
-                            id="add-menu-button"
-                            className="flex justify-center items-center p-1.5 mt-2 rounded-lg cursor-pointer"
-                            style={{
-                                backgroundColor: "rgba(255,255,255,0.1)",
-                                color: "rgba(255,255,255,0.6)",
-                            }}
-                        >
-                            <span>Add Menus</span>
-                        </div>
-                    </div>
-                    <img
-                        id="footer-avatar"
-                        className="w-12 h-12 rounded-full object-cover flex-shrink-0"
-                        src="./public/img/cat.png"
-                        alt="avatar"
-                    />
-                </div>
+                
 
                 <span
                     id="footer-brand"
