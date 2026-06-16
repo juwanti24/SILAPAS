@@ -1,12 +1,20 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { Link } from "react-router-dom"; // ✅ import Link
-import { FaUserPlus, FaSpinner, FaInbox, FaSearch } from "react-icons/fa";
-
+import {
+  FaUserPlus,
+  FaSpinner,
+  FaInbox,
+  FaSearch,
+  FaEdit,
+  FaTrash,
+} from "react-icons/fa";
 export default function AnakBinaan() {
   const [anakBinaans, setAnakBinaans] = useState([]);
+  const [pembinas, setPembinas] = useState([]);
   const [loading, setLoading] = useState(true);
   const [showForm, setShowForm] = useState(false);
+  const [deleteId, setDeleteId] = useState(null);
   const [query, setQuery] = useState("");
   const [form, setForm] = useState({
     nama_anak: "",
@@ -16,6 +24,26 @@ export default function AnakBinaan() {
     alamat: "",
     id_pembina: "",
   });
+
+  const handleDelete = () => {
+
+  axios
+    .delete(
+      `http://127.0.0.1:8000/api/anak-binaans/${deleteId}`
+    )
+    .then(() => {
+
+      setAnakBinaans(
+        anakBinaans.filter(
+          (item) => item.id_anak !== deleteId
+        )
+      );
+
+      setDeleteId(null);
+
+    });
+
+};
 
   useEffect(() => {
     setLoading(true);
@@ -30,6 +58,12 @@ export default function AnakBinaan() {
         })
         .finally(() => {
           setLoading(false);
+        });
+
+         axios
+        .get("http://127.0.0.1:8000/api/pembinas")
+        .then((response) => {
+            setPembinas(response.data);
         });
     }, 500);
     return () => clearTimeout(timeout);
@@ -152,19 +186,25 @@ export default function AnakBinaan() {
                 className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#D3AC2B]"
               />
             </div>
-            <div>
-              <label className="text-xs font-semibold text-gray-500 mb-1 block">
-                ID Pembina
-              </label>
-              <input
-                type="number"
-                name="id_pembina"
-                value={form.id_pembina}
-                onChange={handleChange}
-                placeholder="ID Pembina"
-                className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#D3AC2B]"
-              />
-            </div>
+           <select
+    name="id_pembina"
+    value={form.id_pembina}
+    onChange={handleChange}
+    className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#D3AC2B]"
+>
+    <option value="">
+        Pilih Pembina
+    </option>
+
+    {pembinas.map((pembina) => (
+        <option
+            key={pembina.id_pembina}
+            value={pembina.id_pembina}
+        >
+            {pembina.nama_pembina} (ID: {pembina.id_pembina})
+        </option>
+    ))}
+</select>
           </div>
           <div className="flex gap-3 mt-4">
             <button
@@ -218,6 +258,9 @@ export default function AnakBinaan() {
                 ID Pembina
               </th>
               <th className="text-left px-5 py-3.5 font-semibold">Alamat</th>
+              <th className="text-left px-5 py-3.5 font-semibold">
+  Aksi
+</th>
             </tr>
           </thead>
           <tbody>
@@ -275,6 +318,64 @@ export default function AnakBinaan() {
                   <td className="px-5 py-3.5 text-gray-600 max-w-[200px] truncate">
                     {anak.alamat}
                   </td>
+                  <td className="px-5 py-3.5">
+
+  <div className="flex gap-2">
+
+    <Link
+      to={`/anak-binaan/edit/${anak.id_anak}`}
+      className="bg-blue-100 text-blue-700 px-3 py-1 rounded-lg hover:bg-blue-200"
+    >
+      <FaEdit />
+    </Link>
+
+    <button
+      onClick={() => setDeleteId(anak.id_anak)}
+      className="bg-red-100 text-red-700 px-3 py-1 rounded-lg hover:bg-red-200"
+    >
+      <FaTrash />
+    </button>
+    {deleteId && (
+  <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50">
+
+    <div className="bg-white rounded-xl p-6 w-[400px] shadow-xl">
+
+      <h2 className="text-xl font-bold text-[#0f1f3d] mb-3">
+        Hapus Data?
+      </h2>
+
+      <p className="text-gray-500 mb-6">
+        Data anak binaan akan dihapus permanen.
+      </p>
+
+      <div className="flex justify-end gap-3">
+
+        <button
+          onClick={() => setDeleteId(null)}
+          className="bg-gray-100 px-4 py-2 rounded-lg"
+        >
+          Batal
+        </button>
+
+        <button
+          onClick={handleDelete}
+          className="bg-red-600 text-white px-4 py-2 rounded-lg"
+        >
+          Hapus
+        </button>
+
+      </div>
+
+    </div>
+
+  </div>
+)}
+
+  </div>
+
+  
+
+</td>
                 </tr>
               ))
             )}

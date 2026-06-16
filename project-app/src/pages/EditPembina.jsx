@@ -15,8 +15,8 @@ export default function EditPembina() {
   });
 
   useEffect(() => {
-    axios.get(`http://127.0.0.1:8000/api/pembinas/${id}`).then((res) => {
-      setForm(res.data);
+    axios.get(`http://127.0.0.1:8000/api/pembinas/${id}`).then((responses) => {
+      setForm(responses.data);
     });
   }, [id]);
 
