@@ -1,8 +1,10 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { FaUserPlus, FaSpinner, FaInbox } from "react-icons/fa";
-
+import { Link } from "react-router-dom";
+import { FaEdit, FaTrash } from "react-icons/fa";
 export default function Pembina() {
+    const [deleteId, setDeleteId] = useState(null);
     const [pembinas, setPembinas] = useState([]);
     const [loading, setLoading] = useState(true);
     const [showForm, setShowForm] = useState(false);
@@ -48,6 +50,20 @@ export default function Pembina() {
                 console.error("Gagal menyimpan data:", error);
             });
     };
+
+    const handleDelete = () => {
+    axios
+        .delete(`http://127.0.0.1:8000/api/pembinas/${deleteId}`)
+        .then(() => {
+            setDeleteId(null);
+            fetchData();
+        })
+        .catch((err) => {
+            console.error(err);
+        });
+};
+
+    
 
     return (
         <div className="p-6">
@@ -147,6 +163,9 @@ export default function Pembina() {
                             <th className="text-left px-5 py-3.5 font-semibold">Jenis Kelamin</th>
                             <th className="text-left px-5 py-3.5 font-semibold">No HP</th>
                             <th className="text-left px-5 py-3.5 font-semibold">Alamat</th>
+                            <th className="text-left px-5 py-3.5 font-semibold">
+    Aksi
+</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -185,6 +204,60 @@ export default function Pembina() {
                                     </td>
                                     <td className="px-5 py-3.5 text-gray-600">{pembina.no_hp}</td>
                                     <td className="px-5 py-3.5 text-gray-600 max-w-[200px] truncate">{pembina.alamat}</td>
+                                    <td className="px-5 py-3.5">
+    <div className="flex gap-2">
+
+        <Link
+            to={`/pembina/edit/${pembina.id_pembina}`}
+            className="bg-blue-100 text-blue-700 px-3 py-2 rounded-lg hover:bg-blue-200 transition"
+        >
+            <FaEdit />
+        </Link>
+
+        <button
+            onClick={() => setDeleteId(pembina.id_pembina)}
+            className="bg-red-100 text-red-700 px-3 py-2 rounded-lg hover:bg-red-200 transition"
+        >
+            <FaTrash />
+        </button>
+        {deleteId && (
+    <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50">
+
+        <div className="bg-white rounded-xl shadow-xl w-[400px] p-6">
+
+            <h2 className="text-xl font-bold text-[#0f1f3d] mb-3">
+                Hapus Pembina
+            </h2>
+
+            <p className="text-gray-500 mb-6">
+                Apakah Anda yakin ingin menghapus data pembina ini?
+            </p>
+
+            <div className="flex justify-end gap-3">
+
+                <button
+                    onClick={() => setDeleteId(null)}
+                    className="px-4 py-2 rounded-lg bg-gray-100 hover:bg-gray-200"
+                >
+                    Batal
+                </button>
+
+                <button
+                    onClick={handleDelete}
+                    className="px-4 py-2 rounded-lg bg-red-600 text-white hover:bg-red-700"
+                >
+                    Hapus
+                </button>
+
+            </div>
+
+        </div>
+
+    </div>
+)}
+
+    </div>
+</td>
                                 </tr>
                             ))
                         )}

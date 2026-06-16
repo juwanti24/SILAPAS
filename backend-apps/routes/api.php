@@ -38,13 +38,6 @@ Route::get('/kamars', function () {
     return response()->json(DB::table('kamars')->get());
 });
 
-Route::get('/kamars/{id}', function ($id) {
-    $kamar = DB::table('kamars')->where('id_kamar', $id)->first();
-    if (!$kamar) {
-        return response()->json(['message' => 'Kamar tidak ditemukan'], 404);
-    }
-    return response()->json($kamar);
-});
 
 // =====================
 // PEMBINA
@@ -53,13 +46,46 @@ Route::get('/pembinas', function () {
     return response()->json(DB::table('pembinas')->get());
 });
 
+// DETAIL PEMBINA
 Route::get('/pembinas/{id}', function ($id) {
-    $pembina = DB::table('pembinas')->where('id_pembina', $id)->first();
-    if (!$pembina) {
-        return response()->json(['message' => 'Pembina tidak ditemukan'], 404);
-    }
-    return response()->json($pembina);
+    return response()->json(
+        DB::table('pembinas')
+            ->where('id_pembina', $id)
+            ->first()
+    );
 });
+
+// UPDATE PEMBINA
+Route::put('/pembinas/{id}', function (Request $request, $id) {
+
+    DB::table('pembinas')
+        ->where('id_pembina', $id)
+        ->update([
+            'nama_pembina' => $request->nama_pembina,
+            'jenis_kelamin' => $request->jenis_kelamin,
+            'no_hp' => $request->no_hp,
+            'alamat' => $request->alamat,
+            'updated_at' => now()
+        ]);
+
+    return response()->json([
+        'message' => 'Pembina berhasil diupdate'
+    ]);
+});
+
+// DELETE PEMBINA
+Route::delete('/pembinas/{id}', function ($id) {
+
+    DB::table('pembinas')
+        ->where('id_pembina', $id)
+        ->delete();
+
+    return response()->json([
+        'message' => 'Pembina berhasil dihapus'
+    ]);
+});
+
+
 
 // =====================
 // ANAK BINAAN

@@ -15,8 +15,7 @@ const Forgot = React.lazy(() => import("./pages/auth/Forgot"));
 const AnakBinaan = React.lazy(() => import("./pages/AnakBinaan"));
 const Pelanggaran = React.lazy(() => import("./pages/Pelanggaran"));
 const Penempatan = React.lazy(() => import("./pages/Penempatan"));
-
-
+const EditPembina = React.lazy(() => import("./pages/EditPembina"));
 function App() {
   return (
     <Suspense fallback={<Loading />}>
@@ -24,10 +23,9 @@ function App() {
         <Route element={<MainLayout />}>
           <Route path="/" element={<Dashboard />} />
           <Route path="/kamar" element={<Kamar />} />
-       
           <Route path="/pembina" element={<Pembina />} />
-         
           <Route path="/anak-binaan" element={<AnakBinaan />} />
+          <Route path="/pembina/edit/:id" element={<EditPembina />} />
           <Route path="/pelanggaran" element={<Pelanggaran />} />
           <Route path="/penempatan" element={<Penempatan />} />
           <Route path="*" element={<NotFound />} />
