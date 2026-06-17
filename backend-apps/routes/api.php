@@ -46,6 +46,23 @@ Route::get('/pembinas', function () {
     return response()->json(DB::table('pembinas')->get());
 });
 
+Route::post('/pembinas', function (Request $request) {
+
+    $id = DB::table('pembinas')->insertGetId([
+        'nama_pembina' => $request->nama_pembina,
+        'jenis_kelamin' => $request->jenis_kelamin,
+        'no_hp' => $request->no_hp,
+        'alamat' => $request->alamat,
+        'created_at' => now(),
+        'updated_at' => now(),
+    ]);
+
+    return response()->json([
+        'message' => 'Pembina berhasil ditambahkan',
+        'id_pembina' => $id
+    ]);
+});
+
 // DETAIL PEMBINA
 Route::get('/pembinas/{id}', function ($id) {
     return response()->json(
