@@ -1,3 +1,4 @@
+
 import {
   MdDashboard,
   MdPeople,
@@ -7,6 +8,7 @@ import {
   MdMeetingRoom,
   MdChevronLeft,
   MdChevronRight,
+  MdAdminPanelSettings,
 } from "react-icons/md";
 
 import { NavLink } from "react-router-dom";
@@ -15,92 +17,126 @@ import { useState } from "react";
 export default function Sidebar() {
   const [collapsed, setCollapsed] = useState(false);
 
-  const menuClass = ({ isActive }) =>
+  const primaryMenuClass = ({ isActive }) =>
     `
-    flex items-center
-    rounded-xl
-    px-4 py-3
-    text-sm
-    transition-all
-    duration-300
-    group
-    ${
-      isActive
-        ? "font-semibold shadow-lg"
-        : "hover:bg-white/5 hover:translate-x-1"
-    }
-  `;
+      relative
+      flex
+      items-center
+      ${collapsed ? "justify-center px-3" : "gap-3 px-4"}
+      py-3
+      rounded-xl
+      text-sm
+      transition-all
+      duration-300
+      overflow-hidden
+      group
+      ${
+        isActive
+          ? "font-semibold shadow-[0_8px_20px_rgba(0,0,0,0.18)]"
+          : "hover:bg-white/[0.07] hover:translate-x-1"
+      }
+    `;
 
-  const menuStyle = (isActive) =>
+  const primaryMenuStyle = (isActive) =>
     isActive
       ? {
           background:
-            "linear-gradient(90deg, rgba(211,172,43,0.25), rgba(211,172,43,0.08))",
-          color: "#D3AC2B",
+            "linear-gradient(90deg, rgba(211,172,43,0.28), rgba(211,172,43,0.08))",
+          color: "#E8C649",
+          boxShadow:
+            "inset 3px 0 0 #D3AC2B, 0 8px 20px rgba(0,0,0,0.12)",
         }
       : {
-          color: "rgba(255,255,255,0.65)",
+          color: "rgba(255,255,255,0.67)",
+          boxShadow: "inset 3px 0 0 transparent",
         };
 
-  const menuClassSecondary = ({ isActive }) =>
+  const secondaryMenuClass = ({ isActive }) =>
     `
-    flex items-center
-    rounded-xl
-    px-4 py-3
-    text-sm
-    transition-all
-    duration-300
-    group
-    ${
-      isActive
-        ? "font-semibold shadow-lg"
-        : "hover:bg-white/5 hover:translate-x-1"
-    }
-  `;
+      relative
+      flex
+      items-center
+      ${collapsed ? "justify-center px-3" : "gap-3 px-4"}
+      py-3
+      rounded-xl
+      text-sm
+      transition-all
+      duration-300
+      overflow-hidden
+      group
+      ${
+        isActive
+          ? "font-semibold shadow-[0_8px_20px_rgba(0,0,0,0.18)]"
+          : "hover:bg-white/[0.07] hover:translate-x-1"
+      }
+    `;
 
-  const menuStyleSecondary = (isActive) =>
+  const secondaryMenuStyle = (isActive) =>
     isActive
       ? {
           background:
-            "linear-gradient(90deg, rgba(126,200,245,0.25), rgba(126,200,245,0.08))",
-          color: "#7EC8F5",
-          borderLeft: "3px solid #7EC8F5",
+            "linear-gradient(90deg, rgba(126,200,245,0.24), rgba(126,200,245,0.06))",
+          color: "#8ED3FA",
+          boxShadow:
+            "inset 3px 0 0 #7EC8F5, 0 8px 20px rgba(0,0,0,0.12)",
         }
       : {
-          color: "rgba(255,255,255,0.55)",
-          borderLeft: "3px solid transparent",
+          color: "rgba(255,255,255,0.6)",
+          boxShadow: "inset 3px 0 0 transparent",
         };
 
   return (
-    <div
+    <aside
       className={`
-      relative
-      flex
-      flex-col
-      min-h-screen
-      transition-all
-      duration-300
-      ${collapsed ? "w-20" : "w-64"}
+        relative
+        flex
+        min-h-screen
+        shrink-0
+        flex-col
+        overflow-visible
+        transition-all
+        duration-300
+        ${collapsed ? "w-20" : "w-64"}
       `}
       style={{
-        backgroundColor: "#293040",
+        background:
+          "linear-gradient(180deg, #30394B 0%, #293040 45%, #222938 100%)",
+        boxShadow: "8px 0 30px rgba(15, 23, 42, 0.08)",
       }}
     >
-      {/* Collapse Button */}
+      {/* Dekorasi latar */}
+      <div className="pointer-events-none absolute inset-0 overflow-hidden">
+        <div className="absolute -left-20 -top-24 h-48 w-48 rounded-full bg-[#D3AC2B]/[0.07] blur-2xl" />
+
+        <div className="absolute -bottom-20 -right-20 h-52 w-52 rounded-full bg-[#7EC8F5]/[0.05] blur-3xl" />
+      </div>
+
+      {/* Tombol Collapse */}
       <button
+        type="button"
         onClick={() => setCollapsed(!collapsed)}
+        title={collapsed ? "Buka sidebar" : "Tutup sidebar"}
         className="
           absolute
-          -right-3
+          -right-4
           top-8
           z-50
+          flex
+          h-9
+          w-9
+          items-center
+          justify-center
+          rounded-full
+          border-4
+          border-[#F5F7FB]
           bg-[#D3AC2B]
           text-[#293040]
-          rounded-full
-          p-1.5
-          shadow-xl
+          shadow-[0_6px_18px_rgba(0,0,0,0.25)]
+          transition-all
+          duration-300
           hover:scale-110
-          transition
+          hover:bg-[#E4BE3E]
+          active:scale-95
         "
       >
         {collapsed ? (
@@ -112,177 +148,248 @@ export default function Sidebar() {
 
       {/* Logo */}
       <div
-        className="
-          px-4
-          py-6
+        className={`
+          relative
+          z-10
           flex
+          min-h-[96px]
           items-center
-          gap-3
           border-b
           border-white/10
-        "
+          px-4
+          py-5
+          ${collapsed ? "justify-center" : "gap-3"}
+        `}
       >
         <div
           className="
-            w-11
-            h-11
-            rounded-2xl
+            relative
             flex
+            h-12
+            w-12
+            shrink-0
             items-center
             justify-center
-            shadow-lg
+            rounded-2xl
+            bg-gradient-to-br
+            from-[#E3BF3E]
+            to-[#C59A16]
+            shadow-[0_10px_25px_rgba(211,172,43,0.25)]
+            transition-transform
+            duration-300
+            hover:rotate-3
+            hover:scale-105
           "
-          style={{
-            backgroundColor: "#D3AC2B",
-          }}
         >
-          <MdChildCare
-            style={{
-              color: "#293040",
-              fontSize: "22px",
-            }}
-          />
+          <div className="absolute inset-1 rounded-xl border border-white/20" />
+
+          <MdAdminPanelSettings className="relative z-10 text-[29px] text-[#293040]" />
         </div>
 
         {!collapsed && (
-          <div>
-            <h1 className="text-white font-bold text-sm">
+          <div className="min-w-0">
+            <h1 className="truncate text-[15px] font-bold tracking-tight text-white">
               LPKA Sistem Web
             </h1>
 
-            <p className="text-[11px] text-white/40">
+            <p className="mt-1 truncate text-[11px] text-white/40">
               Politeknik Caltex Riau
             </p>
           </div>
         )}
       </div>
 
-      {/* Menu */}
-      <div className="flex-1 px-3 py-5">
+      {/* Daftar Menu */}
+      <nav className="relative z-10 flex-1 overflow-y-auto px-3 py-5">
         {!collapsed && (
-          <p className="text-[11px] text-white/30 mb-3 px-2 tracking-widest">
-            MENU UTAMA
-          </p>
+          <div className="mb-3 flex items-center justify-between px-2">
+            <p className="text-[10px] font-semibold tracking-[0.18em] text-white/30">
+              MENU UTAMA
+            </p>
+
+            <span className="h-1.5 w-1.5 rounded-full bg-[#D3AC2B]" />
+          </div>
         )}
 
-        <ul className="space-y-2">
+        <ul className="space-y-1.5">
           <li>
             <NavLink
               to="/"
-              className={menuClass}
-              style={({ isActive }) => menuStyle(isActive)}
+              title={collapsed ? "Dashboard" : ""}
+              className={primaryMenuClass}
+              style={({ isActive }) =>
+                primaryMenuStyle(isActive)
+              }
             >
-              <MdDashboard className="text-xl shrink-0" />
+              <MdDashboard className="shrink-0 text-[22px] transition-transform duration-300 group-hover:scale-110" />
 
-              {!collapsed && <span>Dashboard</span>}
+              {!collapsed && (
+                <span className="truncate">
+                  Dashboard
+                </span>
+              )}
             </NavLink>
           </li>
 
           <li>
             <NavLink
               to="/kamar"
-              className={menuClass}
-              style={({ isActive }) => menuStyle(isActive)}
+              title={collapsed ? "Data Kamar" : ""}
+              className={primaryMenuClass}
+              style={({ isActive }) =>
+                primaryMenuStyle(isActive)
+              }
             >
-              <MdReceiptLong className="text-xl shrink-0" />
+              <MdReceiptLong className="shrink-0 text-[22px] transition-transform duration-300 group-hover:scale-110" />
 
-              {!collapsed && <span>Data Kamar</span>}
+              {!collapsed && (
+                <span className="truncate">
+                  Data Kamar
+                </span>
+              )}
             </NavLink>
           </li>
 
           <li>
             <NavLink
               to="/pembina"
-              className={menuClass}
-              style={({ isActive }) => menuStyle(isActive)}
+              title={collapsed ? "Data Pembina" : ""}
+              className={primaryMenuClass}
+              style={({ isActive }) =>
+                primaryMenuStyle(isActive)
+              }
             >
-              <MdPeople className="text-xl shrink-0" />
+              <MdPeople className="shrink-0 text-[22px] transition-transform duration-300 group-hover:scale-110" />
 
-              {!collapsed && <span>Data Pembina</span>}
+              {!collapsed && (
+                <span className="truncate">
+                  Data Pembina
+                </span>
+              )}
             </NavLink>
           </li>
         </ul>
 
-        {/* Divider */}
+        {/* Pembatas */}
         <div className="my-6">
-          {!collapsed && (
-            <div className="flex items-center gap-2">
-              <div className="flex-1 h-px bg-white/10" />
+          {collapsed ? (
+            <div className="mx-auto h-px w-8 bg-white/10" />
+          ) : (
+            <div className="flex items-center gap-3 px-1">
+              <div className="h-px flex-1 bg-gradient-to-r from-transparent to-white/15" />
 
-              <span className="text-[11px] text-[#7EC8F5] tracking-widest">
+              <span className="text-[10px] font-semibold tracking-[0.18em] text-[#7EC8F5]">
                 BINAAN
               </span>
 
-              <div className="flex-1 h-px bg-white/10" />
+              <div className="h-px flex-1 bg-gradient-to-l from-transparent to-white/15" />
             </div>
           )}
         </div>
 
-        <ul className="space-y-2">
+        <ul className="space-y-1.5">
           <li>
             <NavLink
               to="/anak-binaan"
-              className={menuClassSecondary}
+              title={collapsed ? "Data Anak Binaan" : ""}
+              className={secondaryMenuClass}
               style={({ isActive }) =>
-                menuStyleSecondary(isActive)
+                secondaryMenuStyle(isActive)
               }
             >
-              <MdChildCare className="text-xl shrink-0" />
+              <MdChildCare className="shrink-0 text-[22px] transition-transform duration-300 group-hover:scale-110" />
 
-              {!collapsed && <span>Data Anak Binaan</span>}
+              {!collapsed && (
+                <span className="truncate">
+                  Data Anak Binaan
+                </span>
+              )}
             </NavLink>
           </li>
 
           <li>
             <NavLink
               to="/pelanggaran"
-              className={menuClassSecondary}
+              title={
+                collapsed
+                  ? "Pelanggaran & Sanksi"
+                  : ""
+              }
+              className={secondaryMenuClass}
               style={({ isActive }) =>
-                menuStyleSecondary(isActive)
+                secondaryMenuStyle(isActive)
               }
             >
-              <MdGavel className="text-xl shrink-0" />
+              <MdGavel className="shrink-0 text-[22px] transition-transform duration-300 group-hover:scale-110" />
 
-              {!collapsed && <span>Pelanggaran & Sanksi</span>}
+              {!collapsed && (
+                <span className="truncate">
+                  Pelanggaran & Sanksi
+                </span>
+              )}
             </NavLink>
           </li>
 
           <li>
             <NavLink
               to="/penempatan"
-              className={menuClassSecondary}
+              title={collapsed ? "Penempatan" : ""}
+              className={secondaryMenuClass}
               style={({ isActive }) =>
-                menuStyleSecondary(isActive)
+                secondaryMenuStyle(isActive)
               }
             >
-              <MdMeetingRoom className="text-xl shrink-0" />
+              <MdMeetingRoom className="shrink-0 text-[22px] transition-transform duration-300 group-hover:scale-110" />
 
-              {!collapsed && <span>Penempatan</span>}
+              {!collapsed && (
+                <span className="truncate">
+                  Penempatan
+                </span>
+              )}
             </NavLink>
           </li>
         </ul>
-      </div>
+      </nav>
 
       {/* Footer */}
-      <div
-        className="
-          border-t
-          border-white/10
-          p-4
-        "
-      >
-        {!collapsed && (
-          <>
-            <div className="text-xs text-white/50 font-semibold">
-              LPKA Sistem Web
+      <div className="relative z-10 border-t border-white/10 p-4">
+        {collapsed ? (
+          <div
+            className="
+              mx-auto
+              flex
+              h-10
+              w-10
+              items-center
+              justify-center
+              rounded-xl
+              border
+              border-white/10
+              bg-white/[0.04]
+            "
+            title="LPKA Sistem Web"
+          >
+            <span className="text-xs font-bold text-[#D3AC2B]">
+              LP
+            </span>
+          </div>
+        ) : (
+          <div className="rounded-xl border border-white/[0.07] bg-white/[0.03] px-3 py-3">
+            <div className="flex items-center gap-2">
+              <span className="h-2 w-2 rounded-full bg-emerald-400 shadow-[0_0_8px_rgba(52,211,153,0.7)]" />
+
+              <span className="text-xs font-semibold text-white/65">
+                Sistem Aktif
+              </span>
             </div>
 
-            <div className="text-[11px] text-white/25 mt-1">
-              © 2025 All Rights Reserved
+            <div className="mt-2 text-[10px] text-white/25">
+              © 2025 LPKA Sistem Web
             </div>
-          </>
+          </div>
         )}
       </div>
-    </div>
+    </aside>
   );
 }
+
