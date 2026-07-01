@@ -80,11 +80,15 @@ function StatCard({
     );
 }
 
+
 export default function Dashboard() {
     const navigate = useNavigate();
 
     const [anakBinaans, setAnakBinaans] = useState([]);
+    const [kamar, setKamar] = useState([]);
+    const [pelanggarans, setPelanggarans] = useState([]);
     const [loading, setLoading] = useState(true);
+    const [pelanggaranLoading, setPelanggaranLoading] = useState(true);
     const [error, setError] = useState("");
 
     useEffect(() => {
@@ -115,6 +119,57 @@ export default function Dashboard() {
         getAnakBinaans();
     }, []);
 
+      useEffect(() => {
+        const getKamar = async () => {
+            try {
+                setLoading(true);
+                setError("");
+
+                const response = await axios.get(
+                    "http://127.0.0.1:8000/api/kamars"
+                );
+
+                setKamar(response.data);
+            } catch (err) {
+                console.error(
+                    "Gagal mengambil data kamar:",
+                    err
+                );
+
+                setError(
+                    "Data gagal dimuat. Pastikan server Laravel sudah dijalankan."
+                );
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        getKamar();
+    }, []);
+
+    useEffect(() => {
+        const getPelanggarans = async () => {
+            try {
+                setPelanggaranLoading(true);
+
+                const response = await axios.get(
+                    "http://127.0.0.1:8000/api/pelanggarans"
+                );
+
+                setPelanggarans(response.data);
+            } catch (err) {
+                console.error(
+                    "Gagal mengambil data pelanggaran:",
+                    err
+                );
+            } finally {
+                setPelanggaranLoading(false);
+            }
+        };
+
+        getPelanggarans();
+    }, []);
+
     const formatDate = (date) => {
         if (!date) return "-";
 
@@ -124,6 +179,13 @@ export default function Dashboard() {
             year: "numeric",
         });
     };
+
+    const activePelanggaranCount = pelanggarans.filter(
+        (p) => p.status === "Belum Selesai"
+    ).length;
+
+    const totalPelanggaranCount =
+        activePelanggaranCount;
 
     return (
         <div className="min-h-full bg-[#F5F7FB] p-4 md:p-6 lg:p-8">
@@ -204,7 +266,7 @@ export default function Dashboard() {
 
                 <StatCard
                     icon={FaDoorOpen}
-                    value="18"
+                    value={kamar.length}
                     label="Kamar Aktif"
                     description="Kamar yang tersedia dan aktif"
                     iconBackground="#3B475C"
@@ -214,12 +276,12 @@ export default function Dashboard() {
 
                 <StatCard
                     icon={FaClipboardList}
-                    value="7"
+                    value={totalPelanggaranCount}
                     label="Pelanggaran Aktif"
                     description="Pelanggaran yang belum selesai"
                     iconBackground="#B93636"
                     accentColor="#B93636"
-                    loading={false}
+                    loading={pelanggaranLoading}
                 />
             </div>
 
@@ -493,4 +555,3 @@ export default function Dashboard() {
         </div>
     );
 }
-

@@ -93,7 +93,6 @@ export default function Header() {
     <header
       id="header-container"
       className="
-        sticky top-0 z-40
         flex min-h-[72px]
         items-center justify-between
         border-b border-slate-200/80
@@ -303,4 +302,3 @@ export default function Header() {
     </header>
   );
 }
-

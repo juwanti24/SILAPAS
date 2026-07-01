@@ -15,21 +15,21 @@ export default function Register() {
             <form>
                 <div className="mb-4">
                     <label
-                        htmlFor="email"
+                        htmlFor="username"
                         className="block text-xs font-medium mb-1.5"
                         style={{ color: "#3B475C" }}>
-                        Email Address
+                        Username
                     </label>
                     <input
-                        type="email"
-                        id="email"
+                        type="text"
+                        id="username"
                         className="w-full px-3 py-2.5 text-sm rounded-lg outline-none transition-all"
                         style={{
                             backgroundColor: "#F7F8FA",
                             border: "0.5px solid #D0D3DA",
                             color: "#293040",
                         }}
-                        placeholder="admin@lpka.go.id"
+                        placeholder="admin_lpka"
                         onFocus={(e) => (e.target.style.borderColor = "#D3AC2B")}
                         onBlur={(e) => (e.target.style.borderColor = "#D0D3DA")}
                     />
@@ -97,7 +97,7 @@ export default function Register() {
             <p className="text-center text-xs mt-6" style={{ color: "#8A90A0" }}>
                 Sudah punya akun?{" "}
                 <a
-                    href="/login"
+                    href="/"
                     className="font-medium transition-opacity hover:opacity-75"
                     style={{ color: "#D3AC2B" }}
                 >

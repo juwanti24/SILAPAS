@@ -214,7 +214,7 @@ export default function Sidebar() {
         <ul className="space-y-1.5">
           <li>
             <NavLink
-              to="/"
+              to="/dashboard"
               title={collapsed ? "Dashboard" : ""}
               className={primaryMenuClass}
               style={({ isActive }) =>

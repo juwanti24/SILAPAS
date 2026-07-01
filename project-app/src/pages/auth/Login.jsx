@@ -36,7 +36,7 @@ export default function Login() {
         "user",
         JSON.stringify(response.data.user)
     );
-                navigate("/");
+                navigate("/dashboard");
             })
             .catch((err) => {
                 if (err.response) {

@@ -51,7 +51,7 @@ export default function Forgot() {
             <p className="text-center text-xs mt-6" style={{ color: "#8A90A0" }}>
                 Ingat password Anda?{" "}
                 <a
-                    href="/login"
+                    href="/"
                     className="font-medium transition-opacity hover:opacity-75"
                     style={{ color: "#D3AC2B" }}
                 >

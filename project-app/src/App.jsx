@@ -22,7 +22,7 @@ function App() {
     <Suspense fallback={<Loading />}>
       <Routes>
         <Route element={<MainLayout />}>
-          <Route path="/" element={<Dashboard />} />
+          <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/kamar" element={<Kamar />} />
           
           <Route path="/pembina" element={<Pembina />} />
@@ -35,7 +35,7 @@ function App() {
         </Route>
 
         <Route element={<AuthLayout />}>
-          <Route path="/login" element={<Login />} />
+          <Route path="/" element={<Login />} />
           <Route path="/register" element={<Register />} />
           <Route path="/forgot" element={<Forgot />} />
         </Route>
