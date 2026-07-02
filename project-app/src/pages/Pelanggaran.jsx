@@ -1,4 +1,3 @@
-
 import { useEffect, useState } from "react";
 import axios from "axios";
 import {
@@ -6,6 +5,8 @@ import {
   FaSpinner,
   FaInbox,
   FaEdit,
+  FaCheckCircle,
+  FaExclamationCircle,
 } from "react-icons/fa";
 
 export default function Pelanggaran() {
@@ -17,6 +18,10 @@ export default function Pelanggaran() {
 
   const [editTarget, setEditTarget] = useState(null);
   const [savingEdit, setSavingEdit] = useState(false);
+
+  // Notifikasi pop up (pengganti alert bawaan browser)
+  const [notif, setNotif] = useState(null);
+  // notif: { type: "success" | "error", title: string, message: string }
 
   const [editForm, setEditForm] = useState({
     jenis_pelanggaran: "",
@@ -90,9 +95,12 @@ export default function Pelanggaran() {
       !form.jenis_pelanggaran.trim() ||
       !form.tanggal_pelanggaran
     ) {
-      alert(
-        "Nama Anak, Jenis Pelanggaran, dan Tanggal wajib diisi."
-      );
+      setNotif({
+        type: "error",
+        title: "Data Belum Lengkap",
+        message:
+          "Nama Anak, Jenis Pelanggaran, dan Tanggal wajib diisi.",
+      });
       return;
     }
 
@@ -124,7 +132,11 @@ export default function Pelanggaran() {
 
       await fetchData();
 
-      alert("Data pelanggaran berhasil disimpan.");
+      setNotif({
+        type: "success",
+        title: "Berhasil Disimpan",
+        message: "Data pelanggaran berhasil disimpan.",
+      });
     } catch (error) {
       console.error(
         "Gagal menyimpan data pelanggaran:",
@@ -136,7 +148,11 @@ export default function Pelanggaran() {
         error.response?.data?.error ||
         "Data gagal disimpan. Pastikan server Laravel sudah berjalan.";
 
-      alert(pesanError);
+      setNotif({
+        type: "error",
+        title: "Gagal Menyimpan",
+        message: pesanError,
+      });
     } finally {
       setSaving(false);
     }
@@ -171,9 +187,12 @@ export default function Pelanggaran() {
       !editForm.jenis_pelanggaran.trim() ||
       !editForm.tanggal_pelanggaran
     ) {
-      alert(
-        "Jenis Pelanggaran dan Tanggal wajib diisi."
-      );
+      setNotif({
+        type: "error",
+        title: "Data Belum Lengkap",
+        message:
+          "Jenis Pelanggaran dan Tanggal wajib diisi.",
+      });
       return;
     }
 
@@ -197,17 +216,24 @@ export default function Pelanggaran() {
 
       await fetchData();
 
-      alert("Data pelanggaran berhasil diperbarui.");
+      setNotif({
+        type: "success",
+        title: "Berhasil Diperbarui",
+        message: "Data pelanggaran berhasil diperbarui.",
+      });
     } catch (error) {
       console.error(
         "Gagal memperbarui data pelanggaran:",
         error
       );
 
-      alert(
-        error.response?.data?.message ||
-          "Data pelanggaran gagal diperbarui."
-      );
+      setNotif({
+        type: "error",
+        title: "Gagal Memperbarui",
+        message:
+          error.response?.data?.message ||
+          "Data pelanggaran gagal diperbarui.",
+      });
     } finally {
       setSavingEdit(false);
     }
@@ -1044,7 +1070,76 @@ export default function Pelanggaran() {
           </div>
         </div>
       )}
+
+      {/* Modal Notifikasi (pengganti alert bawaan browser) */}
+      {notif && (
+        <div
+          className="
+            fixed inset-0 z-50 flex
+            items-center justify-center
+            p-4 backdrop-blur-sm
+          "
+          style={{
+            backgroundColor: "rgba(15, 23, 42, 0.6)",
+          }}
+        >
+          <div
+            className="
+              w-full max-w-sm rounded-3xl
+              bg-white p-6
+              shadow-[0_25px_80px_rgba(0,0,0,0.3)]
+            "
+          >
+            <div
+              className={`
+                mx-auto mb-5 flex h-16 w-16
+                items-center justify-center
+                rounded-2xl
+                ${
+                  notif.type === "success"
+                    ? "bg-emerald-50 ring-8 ring-emerald-50/50"
+                    : "bg-red-50 ring-8 ring-red-50/50"
+                }
+              `}
+            >
+              {notif.type === "success" ? (
+                <FaCheckCircle className="text-xl text-emerald-500" />
+              ) : (
+                <FaExclamationCircle className="text-xl text-red-500" />
+              )}
+            </div>
+
+            <h3 className="text-center text-xl font-bold text-[#182238]">
+              {notif.title}
+            </h3>
+
+            <p className="mt-2 text-center text-sm leading-6 text-slate-500">
+              {notif.message}
+            </p>
+
+            <div className="mt-6">
+              <button
+                type="button"
+                onClick={() => setNotif(null)}
+                className={`
+                  w-full rounded-xl px-4 py-2.5
+                  text-sm font-semibold text-white
+                  shadow-md transition
+                  hover:-translate-y-0.5
+                  hover:shadow-lg
+                  ${
+                    notif.type === "success"
+                      ? "bg-emerald-500 shadow-emerald-500/20 hover:bg-emerald-600"
+                      : "bg-red-500 shadow-red-500/20 hover:bg-red-600"
+                  }
+                `}
+              >
+                Oke, Mengerti
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
-}
-
+} 

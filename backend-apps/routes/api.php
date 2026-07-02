@@ -152,9 +152,9 @@ Route::delete('/pembinas/{id}', function ($id) {
 Route::get('/anak-binaans', function (Request $request) {
     $search = $request->query('search', '');
     $data = DB::table('anak_binaans')
-        ->when($search, function ($query) use ($search) {
-            $query->where('nama_anak', 'like', "%{$search}%");
-        })
+        ->leftJoin('pembinas', 'anak_binaans.id_pembina', '=', 'pembinas.id_pembina')
+        ->select('anak_binaans.*', 'pembinas.nama_pembina')
+        ->when($search, fn($q) => $q->where('anak_binaans.nama_anak', 'like', "%{$search}%"))
         ->get();
     return response()->json($data);
 });

@@ -1,4 +1,3 @@
-
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { Link } from "react-router-dom";
@@ -9,6 +8,10 @@ import {
   FaSearch,
   FaEdit,
   FaTrash,
+  FaChevronLeft,
+  FaChevronRight,
+  FaImage,
+  FaUpload,
 } from "react-icons/fa";
 
 export default function AnakBinaan() {
@@ -19,6 +22,10 @@ export default function AnakBinaan() {
   const [deleteId, setDeleteId] = useState(null);
   const [query, setQuery] = useState("");
 
+  // Pagination
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 10;
+
   const [form, setForm] = useState({
     nama_anak: "",
     tanggal_lahir: "",
@@ -26,7 +33,12 @@ export default function AnakBinaan() {
     jenis_kelamin: "",
     alamat: "",
     id_pembina: "",
+    foto_profil: null,
+    alasan_masuk: "",
+    masa_binaan: "",
   });
+
+  const [previewFoto, setPreviewFoto] = useState(null);
 
   useEffect(() => {
     setLoading(true);
@@ -38,6 +50,7 @@ export default function AnakBinaan() {
         )
         .then((response) => {
           setAnakBinaans(response.data);
+          setCurrentPage(1);
         })
         .catch((error) => {
           console.error(
@@ -72,7 +85,42 @@ export default function AnakBinaan() {
     });
   };
 
+  const handleFileChange = (e) => {
+    const file = e.target.files?.[0] || null;
+
+    setForm({
+      ...form,
+      foto_profil: file,
+    });
+
+    if (file) {
+      const url = URL.createObjectURL(file);
+      setPreviewFoto(url);
+    } else {
+      setPreviewFoto(null);
+    }
+  };
+
+  const resetForm = () => {
+    setForm({
+      nama_anak: "",
+      tanggal_lahir: "",
+      tanggal_masuk: "",
+      jenis_kelamin: "",
+      alamat: "",
+      id_pembina: "",
+      foto_profil: null,
+      alasan_masuk: "",
+      masa_binaan: "",
+    });
+    setPreviewFoto(null);
+  };
+
   const handleSubmit = () => {
+    // Catatan: field foto_profil, alasan_masuk, dan masa_binaan
+    // masih berupa input kosong menunggu skema database & endpoint
+    // upload disiapkan. Saat backend siap, ganti axios.post di bawah
+    // dengan multipart/form-data (FormData) agar file ikut terkirim.
     axios
       .post(
         "http://127.0.0.1:8000/api/anak-binaans",
@@ -80,15 +128,7 @@ export default function AnakBinaan() {
       )
       .then((response) => {
         setShowForm(false);
-
-        setForm({
-          nama_anak: "",
-          tanggal_lahir: "",
-          tanggal_masuk: "",
-          jenis_kelamin: "",
-          alamat: "",
-          id_pembina: "",
-        });
+        resetForm();
 
         setAnakBinaans((dataLama) => [
           ...dataLama,
@@ -133,6 +173,48 @@ export default function AnakBinaan() {
   const jumlahPerempuan = anakBinaans.filter(
     (anak) => anak.jenis_kelamin === "Perempuan"
   ).length;
+
+  // ==== Pagination logic ====
+  const totalPages = Math.max(
+    1,
+    Math.ceil(anakBinaans.length / itemsPerPage)
+  );
+
+  const safePage = Math.min(currentPage, totalPages);
+
+  const paginatedAnakBinaans = anakBinaans.slice(
+    (safePage - 1) * itemsPerPage,
+    safePage * itemsPerPage
+  );
+
+  const goToPage = (page) => {
+    if (page < 1 || page > totalPages) return;
+    setCurrentPage(page);
+  };
+
+  const getPageNumbers = () => {
+    const pages = [];
+    const maxVisible = 5;
+
+    let start = Math.max(
+      1,
+      safePage - Math.floor(maxVisible / 2)
+    );
+    let end = Math.min(
+      totalPages,
+      start + maxVisible - 1
+    );
+
+    if (end - start + 1 < maxVisible) {
+      start = Math.max(1, end - maxVisible + 1);
+    }
+
+    for (let i = start; i <= end; i++) {
+      pages.push(i);
+    }
+
+    return pages;
+  };
 
   return (
     <div className="min-h-full bg-[#F5F7FB] p-4 md:p-6 lg:p-8">
@@ -297,6 +379,59 @@ export default function AnakBinaan() {
           </div>
 
           <div className="p-6">
+            {/* Upload Foto Profil */}
+            <div className="mb-6">
+              <label className="mb-2 block text-xs font-semibold text-slate-600">
+                Foto Profil
+              </label>
+
+              <div className="flex items-center gap-4">
+                <div
+                  className="
+                    flex h-20 w-20 shrink-0 items-center
+                    justify-center overflow-hidden
+                    rounded-2xl border border-dashed
+                    border-slate-300 bg-slate-50
+                  "
+                >
+                  {previewFoto ? (
+                    <img
+                      src={previewFoto}
+                      alt="Preview foto profil"
+                      className="h-full w-full object-cover"
+                    />
+                  ) : (
+                    <FaImage className="text-2xl text-slate-300" />
+                  )}
+                </div>
+
+                <label
+                  htmlFor="foto_profil"
+                  className="
+                    inline-flex cursor-pointer items-center
+                    gap-2 rounded-xl border border-slate-200
+                    bg-slate-50/50 px-4 py-2.5
+                    text-sm font-semibold text-slate-600
+                    transition hover:bg-slate-100
+                  "
+                >
+                  <FaUpload className="text-xs" />
+                  {form.foto_profil
+                    ? form.foto_profil.name
+                    : "Pilih Foto"}
+                </label>
+
+                <input
+                  id="foto_profil"
+                  type="file"
+                  name="foto_profil"
+                  accept="image/*"
+                  onChange={handleFileChange}
+                  className="hidden"
+                />
+              </div>
+            </div>
+
             <div className="grid grid-cols-1 gap-5 md:grid-cols-2">
               <div>
                 <label className="mb-2 block text-xs font-semibold text-slate-600">
@@ -401,15 +536,15 @@ export default function AnakBinaan() {
 
               <div>
                 <label className="mb-2 block text-xs font-semibold text-slate-600">
-                  Alamat
+                  Masa Binaan
                 </label>
 
                 <input
                   type="text"
-                  name="alamat"
-                  value={form.alamat}
+                  name="masa_binaan"
+                  value={form.masa_binaan}
                   onChange={handleChange}
-                  placeholder="Alamat lengkap"
+                  placeholder="Contoh: 6 bulan / 1 tahun"
                   className="
                     w-full rounded-xl border border-slate-200
                     bg-slate-50/50 px-4 py-3 text-sm
@@ -451,18 +586,70 @@ export default function AnakBinaan() {
                       key={pembina.id_pembina}
                       value={pembina.id_pembina}
                     >
-                      {pembina.nama_pembina} (ID:{" "}
-                      {pembina.id_pembina})
+                      {pembina.nama_pembina} 
+                  
                     </option>
                   ))}
                 </select>
+              </div>
+
+              <div className="md:col-span-2">
+                <label className="mb-2 block text-xs font-semibold text-slate-600">
+                  Alamat
+                </label>
+
+                <input
+                  type="text"
+                  name="alamat"
+                  value={form.alamat}
+                  onChange={handleChange}
+                  placeholder="Alamat lengkap"
+                  className="
+                    w-full rounded-xl border border-slate-200
+                    bg-slate-50/50 px-4 py-3 text-sm
+                    text-slate-700 outline-none transition
+                    placeholder:text-slate-300
+                    focus:border-[#D3AC2B]
+                    focus:bg-white
+                    focus:ring-4
+                    focus:ring-[#D3AC2B]/10
+                  "
+                />
+              </div>
+
+              <div className="md:col-span-2">
+                <label className="mb-2 block text-xs font-semibold text-slate-600">
+                  Alasan Masuk
+                </label>
+
+                <textarea
+                  name="alasan_masuk"
+                  value={form.alasan_masuk}
+                  onChange={handleChange}
+                  placeholder="Jelaskan alasan anak binaan masuk"
+                  rows={3}
+                  className="
+                    w-full resize-none rounded-xl
+                    border border-slate-200
+                    bg-slate-50/50 px-4 py-3 text-sm
+                    text-slate-700 outline-none transition
+                    placeholder:text-slate-300
+                    focus:border-[#D3AC2B]
+                    focus:bg-white
+                    focus:ring-4
+                    focus:ring-[#D3AC2B]/10
+                  "
+                />
               </div>
             </div>
 
             <div className="mt-6 flex flex-col-reverse gap-3 sm:flex-row sm:justify-end">
               <button
                 type="button"
-                onClick={() => setShowForm(false)}
+                onClick={() => {
+                  setShowForm(false);
+                  resetForm();
+                }}
                 className="
                   rounded-xl border border-slate-200
                   bg-white px-5 py-2.5
@@ -652,7 +839,7 @@ export default function AnakBinaan() {
                   </td>
                 </tr>
               ) : (
-                anakBinaans.map((anak, index) => (
+                paginatedAnakBinaans.map((anak, index) => (
                   <tr
                     key={anak.id_anak}
                     className="
@@ -671,7 +858,9 @@ export default function AnakBinaan() {
                           font-bold text-slate-500
                         "
                       >
-                        {index + 1}
+                        {(safePage - 1) * itemsPerPage +
+                          index +
+                          1}
                       </div>
                     </td>
 
@@ -721,23 +910,13 @@ export default function AnakBinaan() {
                       {anak.tanggal_masuk || "-"}
                     </td>
 
-                    <td className="px-6 py-4">
-                      {anak.id_pembina ? (
-                        <span
-                          className="
-                            inline-flex rounded-lg
-                            bg-slate-100 px-2.5 py-1
-                            text-xs font-semibold text-slate-600
-                          "
-                        >
-                          #{anak.id_pembina}
-                        </span>
-                      ) : (
-                        <span className="text-xs text-slate-400">
-                          Belum ada
-                        </span>
-                      )}
-                    </td>
+                  <td className="px-6 py-4">
+  {anak.nama_pembina ? (
+    <span className="...">{anak.nama_pembina}</span>
+  ) : (
+    <span className="text-xs text-slate-400">Belum ada</span>
+  )}
+</td>
 
                     <td className="max-w-[220px] truncate px-6 py-4 text-slate-600">
                       {anak.alamat || "-"}
@@ -789,6 +968,139 @@ export default function AnakBinaan() {
             </tbody>
           </table>
         </div>
+
+        {/* Pagination */}
+        {!loading && anakBinaans.length > 0 && (
+          <div
+            className="
+              flex flex-col items-center justify-between
+              gap-4 border-t border-slate-100
+              px-6 py-4 sm:flex-row
+            "
+          >
+            <p className="text-xs text-slate-400">
+              Menampilkan{" "}
+              <span className="font-semibold text-slate-600">
+                {(safePage - 1) * itemsPerPage + 1}
+              </span>{" "}
+              -{" "}
+              <span className="font-semibold text-slate-600">
+                {Math.min(
+                  safePage * itemsPerPage,
+                  anakBinaans.length
+                )}
+              </span>{" "}
+              dari{" "}
+              <span className="font-semibold text-slate-600">
+                {anakBinaans.length}
+              </span>{" "}
+              data
+            </p>
+
+            <div className="flex items-center gap-1.5">
+              <button
+                type="button"
+                onClick={() => goToPage(safePage - 1)}
+                disabled={safePage === 1}
+                className="
+                  inline-flex h-9 w-9 items-center
+                  justify-center rounded-lg border
+                  border-slate-200 text-slate-500
+                  transition
+                  hover:bg-slate-100
+                  disabled:cursor-not-allowed
+                  disabled:opacity-40
+                  disabled:hover:bg-transparent
+                "
+              >
+                <FaChevronLeft className="text-xs" />
+              </button>
+
+              {getPageNumbers()[0] > 1 && (
+                <>
+                  <button
+                    type="button"
+                    onClick={() => goToPage(1)}
+                    className="
+                      inline-flex h-9 w-9 items-center
+                      justify-center rounded-lg
+                      text-xs font-semibold text-slate-500
+                      transition hover:bg-slate-100
+                    "
+                  >
+                    1
+                  </button>
+
+                  <span className="px-1 text-xs text-slate-300">
+                    ...
+                  </span>
+                </>
+              )}
+
+              {getPageNumbers().map((page) => (
+                <button
+                  key={page}
+                  type="button"
+                  onClick={() => goToPage(page)}
+                  className={`
+                    inline-flex h-9 w-9 items-center
+                    justify-center rounded-lg
+                    text-xs font-semibold
+                    transition
+                    ${
+                      page === safePage
+                        ? "bg-[#293040] text-[#D3AC2B] shadow-md"
+                        : "text-slate-500 hover:bg-slate-100"
+                    }
+                  `}
+                >
+                  {page}
+                </button>
+              ))}
+
+              {getPageNumbers()[
+                getPageNumbers().length - 1
+              ] < totalPages && (
+                <>
+                  <span className="px-1 text-xs text-slate-300">
+                    ...
+                  </span>
+
+                  <button
+                    type="button"
+                    onClick={() => goToPage(totalPages)}
+                    className="
+                      inline-flex h-9 w-9 items-center
+                      justify-center rounded-lg
+                      text-xs font-semibold text-slate-500
+                      transition hover:bg-slate-100
+                    "
+                  >
+                    {totalPages}
+                  </button>
+                </>
+              )}
+
+              <button
+                type="button"
+                onClick={() => goToPage(safePage + 1)}
+                disabled={safePage === totalPages}
+                className="
+                  inline-flex h-9 w-9 items-center
+                  justify-center rounded-lg border
+                  border-slate-200 text-slate-500
+                  transition
+                  hover:bg-slate-100
+                  disabled:cursor-not-allowed
+                  disabled:opacity-40
+                  disabled:hover:bg-transparent
+                "
+              >
+                <FaChevronRight className="text-xs" />
+              </button>
+            </div>
+          </div>
+        )}
       </div>
 
       {/* Modal Hapus */}
@@ -870,4 +1182,3 @@ export default function AnakBinaan() {
     </div>
   );
 }
-

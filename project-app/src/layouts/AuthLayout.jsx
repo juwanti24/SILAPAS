@@ -50,7 +50,7 @@ export default function AuthLayout() {
                             </div>
                             <div className="flex flex-col gap-3">
                                 {[
-                                    "Generate sterek otomatis",
+                                    
                                     "Manajemen data anak binaan",
                                     "Akses terbatas petugas internal",
                                 ].map((item, i) => (

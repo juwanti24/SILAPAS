@@ -104,15 +104,15 @@ export default function Header() {
     >
       {/* Search Bar */}
       <div className="relative w-full max-w-md">
-        <FaSearch
+        {/* <FaSearch
           className="
             absolute left-4 top-1/2
             -translate-y-1/2
             text-sm text-slate-400
           "
-        />
+        /> */}
 
-        <input
+        {/* <input
           type="text"
           placeholder="Cari data..."
           className="
@@ -130,7 +130,7 @@ export default function Header() {
             focus:ring-4
             focus:ring-[#D3AC2B]/10
           "
-        />
+        /> */}
       </div>
 
       {/* Menu Header */}
